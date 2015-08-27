@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: net.openhft:compiler:2.2.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.openhft/compiler/2.2.0/170ee9a88d82298d6118a3ae4a450de34120c18f/compiler-2.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.openhft/compiler/2.2.0/b1106f8a2016355e4e6ee13fdf61e906b38beae4/compiler-2.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

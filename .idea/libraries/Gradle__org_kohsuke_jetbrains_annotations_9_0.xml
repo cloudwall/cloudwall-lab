@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.kohsuke.jetbrains:annotations:9.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.kohsuke.jetbrains/annotations/9.0/1535a07290d970f5247ca66064bff1fd1e71844f/annotations-9.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.kohsuke.jetbrains/annotations/9.0/2505857dff4bdf049edef1b9963b01597d08a82d/annotations-9.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

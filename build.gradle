@@ -1,0 +1,77 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+        classpath 'me.champeau.gradle:jmh-gradle-plugin:0.2.0'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'me.champeau.gradle.jmh'
+
+ext {
+    versions = [
+            commonsMath3         : '3.5',
+            jmh                  : '1.10.1',
+            joptSimple           : '4.9',
+            jsr305               : '3.0.0',
+            junit                : '4.12',
+            openhft              : '6.7.1'
+    ]
+}
+
+// remove all the inherited dependencies
+configurations.jmh.dependencies.clear()
+
+group = 'io.cloudwall'
+version = '1.0'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "net.openhft:lang:$versions.openhft",
+            "com.google.code.findbugs:jsr305:$versions.jsr305"
+    testCompile "junit:junit:$versions.junit"
+    jmh "org.openjdk.jmh:jmh-generator-annprocess:$versions.jmh",
+            "net.sf.jopt-simple:jopt-simple:$versions.joptSimple",
+            "org.apache.commons:commons-math3:$versions.commonsMath3",
+            [project.configurations.testCompile]
+}
+
+tasks.getByName('jmhJar') {
+    archiveName = "$project.name-jmh.jar"
+}
+
+idea {
+    module {
+        testSourceDirs += file('src/jmh/java')
+        scopes.TEST.plus += [configurations.jmh]
+    }
+}
+
+task copyLibs(type: Copy) {
+    from configurations.runtime.files
+    into 'build/lib'
+}
+
+task generateScript(type: CreateStartScripts) {
+    applicationName = "OffHeapFastString"
+    mainClassName = "serenity.core.lang.OffHeapFastString"
+    outputDir = file("build/dist/")
+    classpath = configurations.runtime
+}
+
