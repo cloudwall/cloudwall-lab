@@ -26,14 +26,14 @@ public class FastAppenderBenchmark {
 
     @Benchmark
     public void appendBaselineStringBuilder4Bytes() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(64);
         sb.append(test4);
         assertEquals(4, sb.length());
     }
 
     @Benchmark
     public void appendBaselineStringBuilder12Bytes() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(64);
         sb.append(test12);
         assertEquals(12, sb.length());
     }

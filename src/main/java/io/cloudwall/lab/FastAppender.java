@@ -7,24 +7,23 @@ import javax.annotation.Nonnull;
 
 /**
  * Experimental class to help demonstrate performance difference between putByte() and copyMemory() for small arrays.
+ * To make the JIT assembler more readable this class has no bounds checking at all -- this is not a real-world or
+ * safe example for use of Unsafe; it can core dump if mis-used.
  */
 public class FastAppender {
-    private Unsafe unsafe = NativeBytes.UNSAFE;
     private static final int BYTES_OFFSET;
     static {
         BYTES_OFFSET = NativeBytes.UNSAFE.arrayBaseOffset(byte[].class);
     }
 
-    private final long size;
     private final long address;
     private final long putByteCutoff;
 
     private int limit;
 
     public FastAppender(long size, int putByteCutoff) {
-        this.size = size;
         this.putByteCutoff = putByteCutoff;
-        this.address = unsafe.allocateMemory(size);
+        this.address = NativeBytes.UNSAFE.allocateMemory(size);
         for (long i = 0; i < size; i++) {
             putByte(i, (byte)0);
         }
@@ -38,10 +37,6 @@ public class FastAppender {
     public void append(@Nonnull byte[] bytes) {
         int oldLimit = limit;
         limit += bytes.length;
-        if (limit > size) {
-            throw new ArrayIndexOutOfBoundsException("exceeded maximum capacity of " + size + " bytes; " +
-                    "attempted to add " + bytes.length + " bytes");
-        }
         putBytes(oldLimit, bytes);
     }
 
@@ -50,18 +45,17 @@ public class FastAppender {
     }
 
     private void putByte(long index, byte value) {
-        assert((index >= 0) && (index < size));
-        unsafe.putByte(address + index, value);
+        NativeBytes.UNSAFE.putByte(address + index, value);
     }
 
     private void putBytes(long startIndex, byte[] value) {
-        assert((startIndex >= 0) && ((startIndex + value.length) < size));
         if (value.length <= putByteCutoff) {
+            long baseAddress = address + startIndex;
             for (int i = 0; i < value.length; i++) {
-                unsafe.putByte(address + startIndex + i, value[i]);
+                NativeBytes.UNSAFE.putByte(baseAddress + i, value[i]);
             }
         } else {
-            unsafe.copyMemory(value, BYTES_OFFSET, null, address + startIndex, value.length);
+            NativeBytes.UNSAFE.copyMemory(value, BYTES_OFFSET, null, address + startIndex, value.length);
         }
     }
 }
