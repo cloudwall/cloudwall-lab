@@ -14,8 +14,8 @@ import static org.junit.Assert.assertEquals;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
 public class FastAppenderBenchmark {
-    private FastAppender appenderAlwaysCopyMemory = new FastAppender(32, 0);
-    private FastAppender appenderAlwaysPutBytes = new FastAppender(32, Integer.MAX_VALUE);
+    private FastAppender appenderAlwaysCopyMemory = new CopyMemoryFastAppender(32);
+    private FastAppender appenderAlwaysPutBytes = new PutByteFastAppender(32);
 
     private String test4 = "foo!";
     private String test12 = "foo!!!!!!!!!";

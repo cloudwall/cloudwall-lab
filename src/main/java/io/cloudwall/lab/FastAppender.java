@@ -1,7 +1,6 @@
 package io.cloudwall.lab;
 
 import net.openhft.lang.io.NativeBytes;
-import sun.misc.Unsafe;
 
 import javax.annotation.Nonnull;
 
@@ -10,19 +9,12 @@ import javax.annotation.Nonnull;
  * To make the JIT assembler more readable this class has no bounds checking at all -- this is not a real-world or
  * safe example for use of Unsafe; it can core dump if mis-used.
  */
-public class FastAppender {
-    private static final int BYTES_OFFSET;
-    static {
-        BYTES_OFFSET = NativeBytes.UNSAFE.arrayBaseOffset(byte[].class);
-    }
+public abstract class FastAppender {
 
-    private final long address;
-    private final long putByteCutoff;
-
+    protected final long address;
     private int limit;
 
-    public FastAppender(long size, int putByteCutoff) {
-        this.putByteCutoff = putByteCutoff;
+    public FastAppender(long size) {
         this.address = NativeBytes.UNSAFE.allocateMemory(size);
         for (long i = 0; i < size; i++) {
             putByte(i, (byte)0);
@@ -48,14 +40,5 @@ public class FastAppender {
         NativeBytes.UNSAFE.putByte(address + index, value);
     }
 
-    private void putBytes(long startIndex, byte[] value) {
-        if (value.length <= putByteCutoff) {
-            long baseAddress = address + startIndex;
-            for (int i = 0; i < value.length; i++) {
-                NativeBytes.UNSAFE.putByte(baseAddress + i, value[i]);
-            }
-        } else {
-            NativeBytes.UNSAFE.copyMemory(value, BYTES_OFFSET, null, address + startIndex, value.length);
-        }
-    }
+    protected abstract void putBytes(long startIndex, byte[] value);
 }
