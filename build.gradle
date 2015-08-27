@@ -14,7 +14,6 @@ task wrapper(type: Wrapper) {
 }
 
 apply plugin: 'java'
-apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'me.champeau.gradle.jmh'
@@ -63,15 +62,4 @@ idea {
     }
 }
 
-task copyLibs(type: Copy) {
-    from configurations.runtime.files
-    into 'build/lib'
-}
-
-task generateScript(type: CreateStartScripts) {
-    applicationName = "OffHeapFastString"
-    mainClassName = "serenity.core.lang.OffHeapFastString"
-    outputDir = file("build/dist/")
-    classpath = configurations.runtime
-}
 
