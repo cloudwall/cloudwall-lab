@@ -1,4 +1,4 @@
-package io.cloudwall.lab;
+package io.cloudwall.lab.lang;
 
 import org.openjdk.jmh.annotations.*;
 
